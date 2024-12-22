@@ -1,19 +1,19 @@
 import logger from './logger'
 
 interface Environments {
-	discordClientId: string
-	discordClientSecret: string
-	discordToken: string
-	deeplAuthKey: string
-	nodeEnv: string
+	DISCORD_CLIENT_ID: string
+	DISCORD_CLIENT_SECRET: string
+	DISCORD_TOKEN: string
+	DEEPL_AUTH_KEY: string
+	NODE_ENV: string
 }
 
 export const environments: Environments = {
-	discordClientId: retrieveEnvironmentValue('DISCORD_CLIENT_ID'),
-	discordClientSecret: retrieveEnvironmentValue('DISCORD_CLIENT_SECRET'),
-	discordToken: retrieveEnvironmentValue('DISCORD_TOKEN'),
-	deeplAuthKey: retrieveEnvironmentValue('DEEPL_AUTH_KEY'),
-	nodeEnv: retrieveEnvironmentValue('NODE_ENV'),
+	DISCORD_CLIENT_ID: retrieveEnvironmentValue('DISCORD_CLIENT_ID'),
+	DISCORD_CLIENT_SECRET: retrieveEnvironmentValue('DISCORD_CLIENT_SECRET'),
+	DISCORD_TOKEN: retrieveEnvironmentValue('DISCORD_TOKEN'),
+	DEEPL_AUTH_KEY: retrieveEnvironmentValue('DEEPL_AUTH_KEY'),
+	NODE_ENV: retrieveEnvironmentValue('NODE_ENV'),
 }
 
 function retrieveEnvironmentValue(key: string): string {
