@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv'
-import { environments } from './utils'
+import logger from './utils/logger'
 dotenv.config()
 
-function init(): void {
-	console.log(JSON.stringify(environments, undefined, 2))
+async function init(): Promise<void> {
+	logger.info('Deepl Translator Bot is starting...')
 }
 
 init()
