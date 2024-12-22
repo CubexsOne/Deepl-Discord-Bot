@@ -5,7 +5,7 @@ interface Environments {
 	discordClientSecret: string
 	discordToken: string
 	deeplAuthKey: string
-	environment: string
+	nodeEnv: string
 }
 
 export const environments: Environments = {
@@ -13,7 +13,7 @@ export const environments: Environments = {
 	discordClientSecret: retrieveEnvironmentValue('DISCORD_CLIENT_SECRET'),
 	discordToken: retrieveEnvironmentValue('DISCORD_TOKEN'),
 	deeplAuthKey: retrieveEnvironmentValue('DEEPL_AUTH_KEY'),
-	environment: retrieveEnvironmentValue('NODE_ENV'),
+	nodeEnv: retrieveEnvironmentValue('NODE_ENV'),
 }
 
 function retrieveEnvironmentValue(key: string): string {
