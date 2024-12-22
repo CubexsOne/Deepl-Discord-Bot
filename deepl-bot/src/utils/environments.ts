@@ -1,3 +1,5 @@
+import logger from './logger'
+
 interface Environments {
 	discordClientId: string
 	discordClientSecret: string
@@ -11,14 +13,14 @@ export const environments: Environments = {
 	discordClientSecret: retrieveEnvironmentValue('DISCORD_CLIENT_SECRET'),
 	discordToken: retrieveEnvironmentValue('DISCORD_TOKEN'),
 	deeplAuthKey: retrieveEnvironmentValue('DEEPL_AUTH_KEY'),
-	environment: retrieveEnvironmentValue('ENV'),
+	environment: retrieveEnvironmentValue('NODE_ENV'),
 }
 
 function retrieveEnvironmentValue(key: string): string {
 	const envValue = process.env[key]
 	if (envValue === undefined) {
-		throw new Error(`Environment ${key} not found`)
+		logger.error(`Environment ${key} not found`)
+		return ''
 	}
-
 	return envValue
 }
