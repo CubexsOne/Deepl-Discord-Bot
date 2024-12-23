@@ -15,6 +15,7 @@ const { Channel, Message, Reaction } = Partials
 type SlashCommand = () => RESTPostAPIApplicationCommandsJSONBody
 type CommandInteraction = (client: Client) => void
 type ButtonInteraction = (client: Client) => void
+type BotEvent = (client: Client) => void
 
 export class Discord {
 	public readonly Instance: Discord
@@ -23,6 +24,7 @@ export class Discord {
 	private clientId: string
 	private clientSecret: string
 	private slashCommands: SlashCommand[] = []
+	private botEvents: BotEvent[] = []
 	private commandInteractions: CommandInteraction[] = []
 	private buttonInteractions: ButtonInteraction[] = []
 
@@ -41,6 +43,10 @@ export class Discord {
 
 	public addSlashCommand(command: SlashCommand): void {
 		this.slashCommands.push(command)
+	}
+
+	public addBotEvent(botEvent: BotEvent): void {
+		this.botEvents.push(botEvent)
 	}
 
 	public addCommandInteraction(interaction: CommandInteraction): void {
@@ -66,6 +72,7 @@ export class Discord {
 
 		this.client.once('ready', async () => {
 			await this.registerSlashCommands()
+			this.registerBotEvents()
 			this.registerCommandInteractions()
 			this.registerButtonInteractions()
 
@@ -89,6 +96,16 @@ export class Discord {
 		await rest.put(Routes.applicationGuildCommands(this.clientId, this.clientSecret), {
 			body: this.slashCommands,
 		})
+	}
+
+	private registerBotEvents(): void {
+		if (this.botEvents.length === 0) {
+			return
+		}
+		logger.info('Register Bot Events...')
+		for (const botEvent of this.botEvents) {
+			botEvent(this.client)
+		}
 	}
 
 	private registerCommandInteractions(): void {
