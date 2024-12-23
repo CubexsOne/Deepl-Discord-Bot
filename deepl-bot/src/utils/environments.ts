@@ -2,6 +2,7 @@ import logger from './logger'
 
 interface Environments {
 	DISCORD_SERVER_ID: string
+	DISCORD_CHANNELS_TO_LISTEN: string[]
 	DISCORD_CLIENT_ID: string
 	DISCORD_CLIENT_SECRET: string
 	DISCORD_TOKEN: string
@@ -11,6 +12,7 @@ interface Environments {
 
 export const environments: Environments = {
 	DISCORD_SERVER_ID: retrieveEnvironmentValue('DISCORD_SERVER_ID'),
+	DISCORD_CHANNELS_TO_LISTEN: retrieveEnvironmentValueAsArray('DISCORD_CHANNELS_TO_LISTEN'),
 	DISCORD_CLIENT_ID: retrieveEnvironmentValue('DISCORD_CLIENT_ID'),
 	DISCORD_CLIENT_SECRET: retrieveEnvironmentValue('DISCORD_CLIENT_SECRET'),
 	DISCORD_TOKEN: retrieveEnvironmentValue('DISCORD_TOKEN'),
@@ -25,4 +27,14 @@ function retrieveEnvironmentValue(key: string): string {
 		return ''
 	}
 	return envValue
+}
+
+function retrieveEnvironmentValueAsArray(key: string): string[] {
+	const envValues = process.env[key]
+	if (envValues === undefined) {
+		logger.error(`Environment ${key} not found`)
+		return []
+	}
+
+	return envValues.split(',')
 }
