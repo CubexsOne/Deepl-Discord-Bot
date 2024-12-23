@@ -1,0 +1,37 @@
+networks:
+  deepl-translator-bot:
+
+volumes:
+  postgres-data:
+
+services:
+  #####################
+  ## Dev Environment ##
+  #####################
+  postgres:
+    image: postgres:17.2
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=local
+      - POSTGRES_PASSWORD=local
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - deepl-translator-bot
+    ports:
+      - "5432:5432"
+
+  pgAdmin:
+    image: dpage/pgadmin4:8.14.0
+    depends_on:
+      postgres:
+        condition: service_started
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    volumes:
+      - ./server.json:/pgadmin4/servers.json
+    networks:
+      - deepl-translator-bot
+    ports:
+      - "80:80"
