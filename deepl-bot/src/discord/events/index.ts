@@ -1,1 +1,1 @@
-export * from './join-guild-event'
+export * from './leave-invalid-server-event'
