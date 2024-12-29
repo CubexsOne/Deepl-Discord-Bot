@@ -4,7 +4,9 @@
 Coming soon...
 
 ### How Tos:
-- [Howto][howto]
+- [How to initialize database with prisma from scratch][how-to-initialize-database-with-prisma-from-scratch.md]
+- [How to initialize database with prisma to existing project][how-to-initialize-database-with-prisma-to-existing-project]
+- [How to migrate database][how-to-migrate-database.md]
 
 ### Contributing
 
@@ -25,4 +27,6 @@ Made with 💙 by [CubexsOne][github]
 <!-- File / Directory Links -->
 [contributing]: ./CONTRIBUTING.md
 [docs]: ./docs
-[howto]: ./docs/howto
+[how-to-initialize-database-with-prisma-from-scratch.md]: ./docs/howto/how-to-initialize-database-with-prisma-from-scratch.md
+[how-to-initialize-database-with-prisma-to-existing-project]: ./docs/howto/how-to-initialize-database-with-prisma-to-existing-project
+[how-to-migrate-database.md]: ./docs/howto/how-to-migrate-database.md
