@@ -12,7 +12,7 @@ import logger from '../utils/logger'
 const { Guilds, GuildMessages, GuildMessageReactions, GuildPresences } = GatewayIntentBits
 const { Channel, Message, Reaction } = Partials
 
-type SlashCommand = () => RESTPostAPIApplicationCommandsJSONBody
+type SlashCommand = RESTPostAPIApplicationCommandsJSONBody
 type CommandInteraction = (client: Client) => void
 type ButtonInteraction = (client: Client) => void
 type BotEvent = (client: Client) => void
@@ -93,7 +93,7 @@ export class Discord {
 			})
 		}
 
-		await rest.put(Routes.applicationGuildCommands(this.clientId, this.clientSecret), {
+		await rest.put(Routes.applicationGuildCommands(this.clientId, environments.DISCORD_SERVER_ID), {
 			body: this.slashCommands,
 		})
 	}
