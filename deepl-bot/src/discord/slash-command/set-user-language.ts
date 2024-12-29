@@ -1,9 +1,15 @@
-import { RESTPostAPIApplicationCommandsJSONBody, SlashCommandBuilder } from 'discord.js'
+import {
+	Client,
+	Events,
+	RESTPostAPIApplicationCommandsJSONBody,
+	SlashCommandBuilder,
+} from 'discord.js'
 import { availableLanguages } from '../common'
 
-export async function setUserLanguage(): Promise<RESTPostAPIApplicationCommandsJSONBody> {
+const COMMAND_NAME = 'language'
+export function setUserLanguageSlashCommand(): RESTPostAPIApplicationCommandsJSONBody {
 	const command = new SlashCommandBuilder()
-		.setName('language')
+		.setName(COMMAND_NAME)
 		.setDescription('Set language for translation')
 		.addStringOption((option) =>
 			option
@@ -14,4 +20,19 @@ export async function setUserLanguage(): Promise<RESTPostAPIApplicationCommandsJ
 		)
 
 	return command.toJSON()
+}
+
+export function setUserLanguageInteraction(client: Client): void {
+	client.on(Events.InteractionCreate, async (interaction) => {
+		if (!interaction.isChatInputCommand()) return
+
+		if (interaction.commandName !== COMMAND_NAME) return
+		await interaction.deferReply({ ephemeral: true })
+
+		// TODO: Add storing value in database
+
+		await interaction.editReply({
+			content: 'Language successful set!',
+		})
+	})
 }

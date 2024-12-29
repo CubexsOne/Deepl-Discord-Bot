@@ -3,15 +3,19 @@ import logger from './utils/logger'
 import { Discord } from './discord'
 import { environments } from './utils'
 import { leaveInvalidServerEvent } from './discord/events'
-import { setUserLanguage } from './discord/slash-command'
+import { setUserLanguageInteraction, setUserLanguageSlashCommand } from './discord/slash-command'
 dotenv.config()
 
-function addDiscordEvents(bot: Discord): void {
+async function addDiscordEvents(bot: Discord): Promise<void> {
 	bot.addBotEvent(leaveInvalidServerEvent)
 }
 
 async function addDiscordSlashCommands(bot: Discord): Promise<void> {
-	bot.addSlashCommand(await setUserLanguage())
+	bot.addSlashCommand(await setUserLanguageSlashCommand())
+}
+
+async function addDiscordCommandInteractions(bot: Discord): Promise<void> {
+	bot.addCommandInteraction(setUserLanguageInteraction)
 }
 
 async function init(): Promise<void> {
@@ -23,8 +27,9 @@ async function init(): Promise<void> {
 
 	try {
 		logger.info('Deepl Translator Bot is starting...')
-		addDiscordEvents(bot)
+		await addDiscordEvents(bot)
 		await addDiscordSlashCommands(bot)
+		await addDiscordCommandInteractions(bot)
 
 		await bot.start()
 	} catch (error) {
