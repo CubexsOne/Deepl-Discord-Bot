@@ -1,0 +1,7 @@
+deepl-bot/.env
+deepl-bot/.env.example
+deepl-bot/.prettierignore
+deepl-bot/.prettierrc
+deepl-bot/node_modules
+deepl-bot/eslint.config.mjs
+deepl-bot/Makefile
