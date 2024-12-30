@@ -1,10 +1,12 @@
 {
 	"scripts": {
 		"dev": "nodemon -r dotenv/config src/main.ts",
+		"prod": "nodemon src/main.ts",
 		"build": "tsc src/main.ts --outDir app",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"deploy": "prisma migrate deploy"
+		"prisma:deploy": "prisma migrate deploy",
+		"prisma:generate": "prisma generate"
 	},
 	"dependencies": {
 		"@prisma/client": "^6.1.0",
