@@ -13,14 +13,6 @@ export function translateMessageOnReactionEvent(client: Client): void {
 		if (interaction.emoji.id !== environments.DISCORD_TRANSLATE_EMOJI_ID) return
 		if (!environments.DISCORD_CHANNELS_TO_LISTEN.includes(interaction.message.channelId)) return
 
-		if (interaction.partial) {
-			try {
-				await interaction.fetch()
-			} catch (error) {
-				logger.error(error)
-			}
-		}
-
 		const serverId = environments.DISCORD_SERVER_ID
 		const channelId = interaction.message.channelId
 		const messageId = interaction.message.id
@@ -32,6 +24,7 @@ export function translateMessageOnReactionEvent(client: Client): void {
 				await timers.setTimeout(3_000)
 				await message.delete()
 			} else {
+				await interaction.fetch()
 				const { targetLanguage } = await getUserSettings(user.id)
 				const targetFlag = mapLanguageToFlag(targetLanguage)
 				const originalMessage = interaction.message.content
