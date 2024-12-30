@@ -6,6 +6,6 @@ export function addReactionToChatMessageEvent(client: Client): void {
 		if (!environments.DISCORD_CHANNELS_TO_LISTEN.includes(message.channelId)) return
 		if (message.author.id === client.user?.id) return
 
-		await message.react('1323285281654312960')
+		await message.react(environments.DISCORD_TRANSLATE_EMOJI_ID)
 	})
 }
