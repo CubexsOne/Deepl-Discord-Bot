@@ -15,6 +15,7 @@ export function mapLanguageToFlag(language: string): string {
 	switch (language) {
 		case 'de':
 			return '🇩🇪'
+		case 'en':
 		case 'en-US':
 			return '🇺🇸'
 		case 'en-GB':
