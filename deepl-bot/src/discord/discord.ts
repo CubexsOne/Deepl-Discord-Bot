@@ -1,7 +1,9 @@
 import {
+	ActivityType,
 	Client,
 	GatewayIntentBits,
 	Partials,
+	PresenceUpdateStatus,
 	REST,
 	RESTPostAPIApplicationCommandsJSONBody,
 	Routes,
@@ -18,7 +20,7 @@ type ButtonInteraction = (client: Client) => void
 type BotEvent = (client: Client) => void
 
 export class Discord {
-	public readonly Instance: Discord
+	public static Instance: Discord
 
 	private botToken: string
 	private clientId: string
@@ -34,11 +36,25 @@ export class Discord {
 	})
 
 	constructor(botToken: string, clientId: string, clientSecret: string) {
-		this.Instance = this
+		Discord.Instance = this
 
 		this.botToken = botToken
 		this.clientId = clientId
 		this.clientSecret = clientSecret
+	}
+
+	public static getInstance(): Discord {
+		return this.Instance
+	}
+
+	public setStatus(
+		activityMessage: string,
+		status: PresenceUpdateStatus.Online | PresenceUpdateStatus.Invisible,
+	): void {
+		this.client.user?.setPresence({
+			activities: [{ name: activityMessage, type: ActivityType.Custom }],
+			status,
+		})
 	}
 
 	public addSlashCommand(command: SlashCommand): void {
