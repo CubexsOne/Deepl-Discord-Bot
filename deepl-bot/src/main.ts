@@ -7,7 +7,11 @@ import {
 	leaveInvalidServerEvent,
 	translateMessageOnReactionEvent,
 } from './discord/events'
-import { setUserSettingsInteraction, setUserSettingsCommand } from './discord/slash-command'
+import {
+	deleteUserSettingsInteraction,
+	setUserSettingsInteraction,
+	userSettingsCommand,
+} from './discord/slash-command'
 dotenv.config()
 
 async function addDiscordEvents(bot: Discord): Promise<void> {
@@ -17,11 +21,12 @@ async function addDiscordEvents(bot: Discord): Promise<void> {
 }
 
 async function addDiscordSlashCommands(bot: Discord): Promise<void> {
-	bot.addSlashCommand(setUserSettingsCommand())
+	bot.addSlashCommand(userSettingsCommand())
 }
 
 async function addDiscordCommandInteractions(bot: Discord): Promise<void> {
 	bot.addCommandInteraction(setUserSettingsInteraction)
+	bot.addCommandInteraction(deleteUserSettingsInteraction)
 }
 
 async function init(): Promise<void> {
