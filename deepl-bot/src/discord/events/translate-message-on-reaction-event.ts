@@ -21,7 +21,7 @@ export function translateMessageOnReactionEvent(client: Client): void {
 				const message = await user.send({
 					embeds: [createNoSettingsEmbed(serverId, channelId, messageId)],
 				})
-				await timers.setTimeout(3_000)
+				await timers.setTimeout(10_000)
 				await message.delete()
 			} else {
 				await interaction.fetch()
