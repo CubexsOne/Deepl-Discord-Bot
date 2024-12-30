@@ -17,7 +17,7 @@ export const environments: Environments = {
 	DISCORD_CLIENT_ID: retrieveEnvironmentValue('DISCORD_CLIENT_ID'),
 	DISCORD_CLIENT_SECRET: retrieveEnvironmentValue('DISCORD_CLIENT_SECRET'),
 	DISCORD_TOKEN: retrieveEnvironmentValue('DISCORD_TOKEN'),
-	DISCORD_TRANSLATE_EMOJI_ID: retrieveEnvironmentValue('DISCORD_TRANSLATE_EMOJI_ID='),
+	DISCORD_TRANSLATE_EMOJI_ID: retrieveEnvironmentValue('DISCORD_TRANSLATE_EMOJI_ID'),
 	DEEPL_AUTH_KEY: retrieveEnvironmentValue('DEEPL_AUTH_KEY'),
 	NODE_ENV: retrieveEnvironmentValue('NODE_ENV'),
 }
