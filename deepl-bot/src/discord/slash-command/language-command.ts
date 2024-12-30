@@ -5,8 +5,12 @@ import {
 	SlashCommandBuilder,
 } from 'discord.js'
 import { availableLanguages } from '../common'
-import { PrismaClient } from '@prisma/client'
 import logger from '../../utils/logger'
+import {
+	createUserSettings,
+	hasUserSettings,
+	updateUserSettings,
+} from '../../database/user-settings'
 
 const COMMAND_NAME = 'language'
 const OPTION_NAME = 'target-language'
@@ -35,12 +39,11 @@ export function setUserLanguageInteraction(client: Client): void {
 		const userId = interaction.user.id
 		const targetLanguage = interaction.options.getString(OPTION_NAME)!
 
-		const prisma = new PrismaClient()
 		try {
-			if (await hasUserSettings(prisma, userId)) {
-				await updateUserSettings(prisma, userId, targetLanguage)
+			if (await hasUserSettings(userId)) {
+				await updateUserSettings(userId, targetLanguage)
 			} else {
-				await createUserSettings(prisma, userId, targetLanguage)
+				await createUserSettings(userId, targetLanguage)
 			}
 		} catch (error) {
 			logger.error(error)
@@ -48,50 +51,10 @@ export function setUserLanguageInteraction(client: Client): void {
 				content: 'Error when setting the translation settings!',
 			})
 			return
-		} finally {
-			await prisma.$disconnect()
 		}
 
 		await interaction.editReply({
 			content: 'Translation settings successfully set!',
 		})
-	})
-}
-
-async function hasUserSettings(prisma: PrismaClient, userId: string): Promise<boolean> {
-	const userSettings = await prisma.userSettings.findUnique({
-		where: {
-			userId,
-		},
-	})
-
-	return !!userSettings
-}
-
-async function createUserSettings(
-	prisma: PrismaClient,
-	userId: string,
-	targetLanguage: string,
-): Promise<void> {
-	await prisma.userSettings.create({
-		data: {
-			userId,
-			targetLanguage,
-		},
-	})
-}
-
-async function updateUserSettings(
-	prisma: PrismaClient,
-	userId: string,
-	targetLanguage: string,
-): Promise<void> {
-	await prisma.userSettings.update({
-		where: {
-			userId,
-		},
-		data: {
-			targetLanguage,
-		},
 	})
 }
