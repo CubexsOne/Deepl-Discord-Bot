@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: deepl-bot-config
+  namespace: deepl-bot
+data:
+  DISCORD_SERVER_ID: ""
+  DISCORD_CHANNELS_TO_LISTEN: ""
+  DISCORD_TRANSLATE_EMOJI_ID: ""
