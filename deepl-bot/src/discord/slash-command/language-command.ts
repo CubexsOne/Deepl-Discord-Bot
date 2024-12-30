@@ -14,7 +14,7 @@ import {
 
 const COMMAND_NAME = 'language'
 const OPTION_NAME = 'target-language'
-export function setUserLanguageSlashCommand(): RESTPostAPIApplicationCommandsJSONBody {
+export function setUserSettingsCommand(): RESTPostAPIApplicationCommandsJSONBody {
 	const command = new SlashCommandBuilder()
 		.setName(COMMAND_NAME)
 		.setDescription('Set language for translation')
@@ -29,7 +29,7 @@ export function setUserLanguageSlashCommand(): RESTPostAPIApplicationCommandsJSO
 	return command.toJSON()
 }
 
-export function setUserLanguageInteraction(client: Client): void {
+export function setUserSettingsInteraction(client: Client): void {
 	client.on(Events.InteractionCreate, async (interaction) => {
 		if (!interaction.isChatInputCommand()) return
 
