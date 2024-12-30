@@ -5,3 +5,9 @@ help:
 
 run: ## Run local dev environment
 	@cd local; docker compose up; docker compose down
+
+build-docker: ## Build docker-image
+	@docker build . -t ghcr.io/cubexsone/deepl-bot:$(VERSION)
+
+push: ## Push to github registry
+	@docker push ghcr.io/cubexsone/deepl-bot:$(VERSION)
