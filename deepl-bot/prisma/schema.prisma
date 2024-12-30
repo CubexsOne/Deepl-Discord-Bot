@@ -18,3 +18,8 @@ model UserSettings {
   userId String @unique @db.VarChar(64)
   targetLanguage String @db.VarChar(5)
 }
+
+model BotSettings {
+  serverId String @unique @db.VarChar(64)
+  reactionTranslations Boolean @default(false)
+}

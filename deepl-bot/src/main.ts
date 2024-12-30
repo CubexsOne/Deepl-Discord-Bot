@@ -2,7 +2,12 @@ import * as dotenv from 'dotenv'
 import logger from './utils/logger'
 import { Discord } from './discord'
 import { environments } from './utils'
-import { leaveInvalidServerEvent, translatePrivateMessages } from './discord/events'
+import {
+	addReactionToChatMessageEvent,
+	leaveInvalidServerEvent,
+	translateMessageOnReactionEvent,
+	translatePrivateMessages,
+} from './discord/events'
 import {
 	deleteUserSettingsInteraction,
 	setUserSettingsInteraction,
@@ -10,12 +15,15 @@ import {
 } from './discord/slash-command'
 import { PresenceUpdateStatus } from 'discord.js'
 import * as deepl from 'deepl-node'
+import { createBotSettings, getBotSettings, hasBotSettings } from './database/bot-settings'
 dotenv.config()
 
 async function addDiscordEvents(bot: Discord): Promise<void> {
-	// bot.addBotEvent(addReactionToChatMessageEvent)
+	if ((await getBotSettings()).reactionTranslations) {
+		bot.addBotEvent(addReactionToChatMessageEvent)
+		bot.addBotEvent(translateMessageOnReactionEvent)
+	}
 	bot.addBotEvent(leaveInvalidServerEvent)
-	// bot.addBotEvent(translateMessageOnReactionEvent)
 	bot.addBotEvent(translatePrivateMessages)
 }
 
@@ -38,6 +46,9 @@ async function init(): Promise<void> {
 
 	try {
 		logger.info('Deepl Translator Bot is starting...')
+		if (!(await hasBotSettings())) {
+			await createBotSettings()
+		}
 		await addDiscordEvents(bot)
 		await addDiscordSlashCommands(bot)
 		await addDiscordCommandInteractions(bot)
