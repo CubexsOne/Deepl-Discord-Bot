@@ -11,7 +11,8 @@ import {
 import { environments } from '../utils/environments'
 import logger from '../utils/logger'
 
-const { Guilds, GuildMessages, GuildMessageReactions, GuildPresences } = GatewayIntentBits
+const { Guilds, GuildMessages, GuildMessageReactions, GuildPresences, DirectMessages } =
+	GatewayIntentBits
 const { Channel, Message, Reaction } = Partials
 
 type SlashCommand = RESTPostAPIApplicationCommandsJSONBody
@@ -31,7 +32,7 @@ export class Discord {
 	private buttonInteractions: ButtonInteraction[] = []
 
 	private client: Client = new Client({
-		intents: [Guilds, GuildMessages, GuildMessageReactions, GuildPresences],
+		intents: [DirectMessages, Guilds, GuildMessages, GuildMessageReactions, GuildPresences],
 		partials: [Channel, Message, Reaction],
 	})
 
