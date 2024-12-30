@@ -3,16 +3,15 @@
 		"dev": "nodemon -r dotenv/config src/main.ts",
 		"build": "tsc src/main.ts --outDir app",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
+		"lint": "prettier --check . && eslint .",
+		"deploy": "prisma migrate deploy"
 	},
 	"dependencies": {
 		"@prisma/client": "^6.1.0",
-		"bufferutil": "^4.0.8",
 		"deepl-node": "^1.15.0",
 		"discord.js": "^14.16.3",
 		"ts-node": "^10.9.2",
-		"typescript": "^5.7.2",
-		"zlib-sync": "^0.1.9"
+		"typescript": "^5.7.2"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.17.0",
