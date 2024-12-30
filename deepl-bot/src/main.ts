@@ -2,11 +2,7 @@ import * as dotenv from 'dotenv'
 import logger from './utils/logger'
 import { Discord } from './discord'
 import { environments } from './utils'
-import {
-	addReactionToChatMessageEvent,
-	leaveInvalidServerEvent,
-	translateMessageOnReactionEvent,
-} from './discord/events'
+import { leaveInvalidServerEvent, translatePrivateMessages } from './discord/events'
 import {
 	deleteUserSettingsInteraction,
 	setUserSettingsInteraction,
@@ -15,9 +11,10 @@ import {
 dotenv.config()
 
 async function addDiscordEvents(bot: Discord): Promise<void> {
-	bot.addBotEvent(addReactionToChatMessageEvent)
+	// bot.addBotEvent(addReactionToChatMessageEvent)
 	bot.addBotEvent(leaveInvalidServerEvent)
-	bot.addBotEvent(translateMessageOnReactionEvent)
+	// bot.addBotEvent(translateMessageOnReactionEvent)
+	bot.addBotEvent(translatePrivateMessages)
 }
 
 async function addDiscordSlashCommands(bot: Discord): Promise<void> {
