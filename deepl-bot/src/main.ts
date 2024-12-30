@@ -2,11 +2,12 @@ import * as dotenv from 'dotenv'
 import logger from './utils/logger'
 import { Discord } from './discord'
 import { environments } from './utils'
-import { leaveInvalidServerEvent } from './discord/events'
+import { addReactionToChatMessageEvent, leaveInvalidServerEvent } from './discord/events'
 import { setUserLanguageInteraction, setUserLanguageSlashCommand } from './discord/slash-command'
 dotenv.config()
 
 async function addDiscordEvents(bot: Discord): Promise<void> {
+	bot.addBotEvent(addReactionToChatMessageEvent)
 	bot.addBotEvent(leaveInvalidServerEvent)
 }
 
