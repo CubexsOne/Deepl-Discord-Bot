@@ -6,6 +6,7 @@ import { getUserSettings, hasUserSettings } from '../../database/user-settings'
 import { mapLanguageToFlag } from '../common'
 import * as deepl from 'deepl-node'
 import { Discord } from '../discord'
+import { createNoSettingsEmbed } from '../embeds'
 
 export function translateMessageOnReactionEvent(client: Client): void {
 	client.on(Events.MessageReactionAdd, async (interaction, user) => {
@@ -19,7 +20,7 @@ export function translateMessageOnReactionEvent(client: Client): void {
 		try {
 			if (!(await hasUserSettings(user.id))) {
 				const message = await user.send({
-					embeds: [createNoSettingsEmbed(serverId, channelId, messageId)],
+					embeds: [createNoSettingsEmbed({ serverId, channelId, messageId })],
 				})
 				await timers.setTimeout(10_000)
 				await message.delete()
@@ -86,27 +87,6 @@ function createLimitReachedEmbed(): EmbedBuilder {
 			name: '\u200B',
 			value:
 				'Translation limit reached for this month. \nLimit will not be refreshed until the first of the next month',
-		})
-
-	return embed
-}
-
-function createNoSettingsEmbed(
-	serverId: string,
-	channelId: string,
-	messageId: string,
-): EmbedBuilder {
-	const embed = new EmbedBuilder()
-		.setTitle('No Translation Settings found!')
-		.setColor(Colors.Red)
-		.addFields({
-			name: 'HINT:',
-			value: 'You have to set your translation settings on the Server!',
-		})
-		.addFields({ name: 'Command', value: '`/language <SELECTED LANGUAGE>`' })
-		.addFields({
-			name: 'Related message:',
-			value: `https://discordapp.com/channels/${serverId}/${channelId}/${messageId}`,
 		})
 
 	return embed

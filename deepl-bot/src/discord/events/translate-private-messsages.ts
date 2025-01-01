@@ -7,6 +7,7 @@ import logger from '../../utils/logger'
 import { mapLanguageToFlag } from '../common'
 import { getUserSettings, hasUserSettings } from '../../database/user-settings'
 import { Discord } from '../discord'
+import { createNoSettingsEmbed } from '../embeds'
 
 export function translatePrivateMessages(client: Client) {
 	client.on(Events.MessageCreate, async (message) => {
@@ -20,7 +21,7 @@ export function translatePrivateMessages(client: Client) {
 				const message = await author.send({
 					embeds: [createNoSettingsEmbed()],
 				})
-				await timers.setTimeout(3_000)
+				await timers.setTimeout(10_000)
 				await message.delete()
 			} else {
 				const { targetLanguage } = await getUserSettings(author.id)
@@ -77,19 +78,6 @@ function createLimitReachedEmbed(): EmbedBuilder {
 			value:
 				'Translation limit reached for this month. \nLimit will not be refreshed until the first of the next month',
 		})
-
-	return embed
-}
-
-function createNoSettingsEmbed(): EmbedBuilder {
-	const embed = new EmbedBuilder()
-		.setTitle('No Translation Settings found!')
-		.setColor(Colors.Red)
-		.addFields({
-			name: 'HINT:',
-			value: 'You have to set your translation settings on the Server!',
-		})
-		.addFields({ name: 'Command', value: '`/language <SELECTED LANGUAGE>`' })
 
 	return embed
 }
