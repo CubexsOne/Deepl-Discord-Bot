@@ -11,12 +11,14 @@ import {
 	usageUpdateDiscordStatus,
 } from '../common'
 import { createLimitReachedEmbed, createNoSettingsEmbed, createTranslationEmbed } from '../embeds'
+import { getBotSettings } from '../../database/bot-settings'
 
 export function translateMessageOnReactionEvent(client: Client): void {
 	client.on(Events.MessageReactionAdd, async (interaction, user) => {
 		if (user.bot) return
 		if (interaction.emoji.id !== environments.DISCORD_TRANSLATE_EMOJI_ID) return
 		if (!environments.DISCORD_CHANNELS_TO_LISTEN.includes(interaction.message.channelId)) return
+		if (!(await getBotSettings()).reactionTranslations) return
 
 		const serverId = environments.DISCORD_SERVER_ID
 		const channelId = interaction.message.channelId
