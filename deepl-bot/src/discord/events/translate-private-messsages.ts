@@ -7,7 +7,7 @@ import logger from '../../utils/logger'
 import { mapLanguageToFlag } from '../common'
 import { getUserSettings, hasUserSettings } from '../../database/user-settings'
 import { Discord } from '../discord'
-import { createNoSettingsEmbed } from '../embeds'
+import { createLimitReachedEmbed, createNoSettingsEmbed } from '../embeds'
 
 export function translatePrivateMessages(client: Client) {
 	client.on(Events.MessageCreate, async (message) => {
@@ -67,19 +67,6 @@ export function translatePrivateMessages(client: Client) {
 			logger.error(error)
 		}
 	})
-}
-
-function createLimitReachedEmbed(): EmbedBuilder {
-	const embed = new EmbedBuilder()
-		.setTitle('Translation limit reached')
-		.setColor(Colors.Red)
-		.addFields({
-			name: '\u200B',
-			value:
-				'Translation limit reached for this month. \nLimit will not be refreshed until the first of the next month',
-		})
-
-	return embed
 }
 
 function createTranslationEmbed(props: {

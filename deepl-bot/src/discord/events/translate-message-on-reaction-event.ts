@@ -6,7 +6,7 @@ import { getUserSettings, hasUserSettings } from '../../database/user-settings'
 import { mapLanguageToFlag } from '../common'
 import * as deepl from 'deepl-node'
 import { Discord } from '../discord'
-import { createNoSettingsEmbed } from '../embeds'
+import { createLimitReachedEmbed, createNoSettingsEmbed } from '../embeds'
 
 export function translateMessageOnReactionEvent(client: Client): void {
 	client.on(Events.MessageReactionAdd, async (interaction, user) => {
@@ -77,19 +77,6 @@ export function translateMessageOnReactionEvent(client: Client): void {
 		)
 		await allReactions?.users.remove(user.id)
 	})
-}
-
-function createLimitReachedEmbed(): EmbedBuilder {
-	const embed = new EmbedBuilder()
-		.setTitle('Translation limit reached')
-		.setColor(Colors.Red)
-		.addFields({
-			name: '\u200B',
-			value:
-				'Translation limit reached for this month. \nLimit will not be refreshed until the first of the next month',
-		})
-
-	return embed
 }
 
 function createTranslationEmbed(props: {
