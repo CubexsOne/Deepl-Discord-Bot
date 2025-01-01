@@ -1,6 +1,7 @@
 import logger from './logger'
 
 interface Environments {
+	DISCORD_AUTHORIZED_USERS: string[]
 	DISCORD_SERVER_ID: string
 	DISCORD_CHANNELS_TO_LISTEN: string[]
 	DISCORD_CLIENT_ID: string
@@ -12,6 +13,7 @@ interface Environments {
 }
 
 export const environments: Environments = {
+	DISCORD_AUTHORIZED_USERS: retrieveEnvironmentValueAsArray('DISCORD_AUTHORIZED_USERS'),
 	DISCORD_SERVER_ID: retrieveEnvironmentValue('DISCORD_SERVER_ID'),
 	DISCORD_CHANNELS_TO_LISTEN: retrieveEnvironmentValueAsArray('DISCORD_CHANNELS_TO_LISTEN'),
 	DISCORD_CLIENT_ID: retrieveEnvironmentValue('DISCORD_CLIENT_ID'),
