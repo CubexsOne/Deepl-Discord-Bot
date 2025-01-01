@@ -1,4 +1,4 @@
-import { ChannelType, Client, Colors, EmbedBuilder, Events, PresenceUpdateStatus } from 'discord.js'
+import { ChannelType, Client, Events, PresenceUpdateStatus } from 'discord.js'
 import * as deepl from 'deepl-node'
 import * as timers from 'node:timers/promises'
 
@@ -7,7 +7,7 @@ import logger from '../../utils/logger'
 import { mapLanguageToFlag } from '../common'
 import { getUserSettings, hasUserSettings } from '../../database/user-settings'
 import { Discord } from '../discord'
-import { createLimitReachedEmbed, createNoSettingsEmbed } from '../embeds'
+import { createLimitReachedEmbed, createNoSettingsEmbed, createTranslationEmbed } from '../embeds'
 
 export function translatePrivateMessages(client: Client) {
 	client.on(Events.MessageCreate, async (message) => {
@@ -67,27 +67,4 @@ export function translatePrivateMessages(client: Client) {
 			logger.error(error)
 		}
 	})
-}
-
-function createTranslationEmbed(props: {
-	originalFlag: string
-	targetFlag: string
-	originalMessage: string | null
-	translatedMessage: string | null
-}): EmbedBuilder {
-	const { originalFlag, targetFlag, originalMessage, translatedMessage } = props
-
-	const embed = new EmbedBuilder()
-		.setTitle(`Translation (${originalFlag} -> ${targetFlag})`)
-		.setColor(Colors.Navy)
-		.addFields({
-			name: 'Original Message:',
-			value: `\`\`\`${originalMessage || '\u200B'}\`\`\``,
-		})
-		.addFields({
-			name: 'Translated Message:',
-			value: `\`\`\`${translatedMessage || '\u200B'}\`\`\``,
-		})
-
-	return embed
 }

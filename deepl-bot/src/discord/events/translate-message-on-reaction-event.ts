@@ -1,4 +1,4 @@
-import { Client, Colors, EmbedBuilder, Events, PresenceUpdateStatus } from 'discord.js'
+import { Client, Events, PresenceUpdateStatus } from 'discord.js'
 import { environments } from '../../utils'
 import logger from '../../utils/logger'
 import * as timers from 'node:timers/promises'
@@ -6,7 +6,7 @@ import { getUserSettings, hasUserSettings } from '../../database/user-settings'
 import { mapLanguageToFlag } from '../common'
 import * as deepl from 'deepl-node'
 import { Discord } from '../discord'
-import { createLimitReachedEmbed, createNoSettingsEmbed } from '../embeds'
+import { createLimitReachedEmbed, createNoSettingsEmbed, createTranslationEmbed } from '../embeds'
 
 export function translateMessageOnReactionEvent(client: Client): void {
 	client.on(Events.MessageReactionAdd, async (interaction, user) => {
@@ -77,36 +77,4 @@ export function translateMessageOnReactionEvent(client: Client): void {
 		)
 		await allReactions?.users.remove(user.id)
 	})
-}
-
-function createTranslationEmbed(props: {
-	serverId: string
-	channelId: string
-	messageId: string
-	originalFlag: string
-	targetFlag: string
-	originalMessage: string | null
-	translatedMessage: string | null
-}): EmbedBuilder {
-	const {
-		serverId,
-		channelId,
-		messageId,
-		originalFlag,
-		targetFlag,
-		originalMessage,
-		translatedMessage,
-	} = props
-
-	const embed = new EmbedBuilder()
-		.setTitle(`Translation (${originalFlag} -> ${targetFlag})`)
-		.setColor(Colors.Navy)
-		.addFields({ name: 'Original Message:', value: originalMessage || '\u200B' })
-		.addFields({ name: 'Translated Message:', value: translatedMessage || '\u200B' })
-		.addFields({
-			name: 'Related message:',
-			value: `https://discordapp.com/channels/${serverId}/${channelId}/${messageId}`,
-		})
-
-	return embed
 }
