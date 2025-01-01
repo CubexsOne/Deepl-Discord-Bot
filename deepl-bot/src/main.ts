@@ -9,31 +9,44 @@ import {
 	translatePrivateMessages,
 } from './discord/events'
 import {
+	botSettingsCommand,
 	deleteUserSettingsInteraction,
+	setBotSettingsInteraction,
 	setUserSettingsInteraction,
 	userSettingsCommand,
 } from './discord/slash-command'
-import { PresenceUpdateStatus } from 'discord.js'
 import * as deepl from 'deepl-node'
-import { createBotSettings, getBotSettings, hasBotSettings } from './database/bot-settings'
+import { createBotSettings, hasBotSettings } from './database/bot-settings'
+import { limitReachedDiscordStatus, usageUpdateDiscordStatus } from './discord/common'
 dotenv.config()
 
-async function addDiscordEvents(bot: Discord): Promise<void> {
-	if ((await getBotSettings()).reactionTranslations) {
-		bot.addBotEvent(addReactionToChatMessageEvent)
-		bot.addBotEvent(translateMessageOnReactionEvent)
-	}
+async function addDiscordEvents(bot: Discord) {
+	bot.addBotEvent(addReactionToChatMessageEvent)
+	bot.addBotEvent(translateMessageOnReactionEvent)
 	bot.addBotEvent(leaveInvalidServerEvent)
 	bot.addBotEvent(translatePrivateMessages)
 }
 
-async function addDiscordSlashCommands(bot: Discord): Promise<void> {
+async function addDiscordSlashCommands(bot: Discord) {
 	bot.addSlashCommand(userSettingsCommand())
+	bot.addSlashCommand(botSettingsCommand())
 }
 
-async function addDiscordCommandInteractions(bot: Discord): Promise<void> {
+async function addDiscordCommandInteractions(bot: Discord) {
 	bot.addCommandInteraction(setUserSettingsInteraction)
 	bot.addCommandInteraction(deleteUserSettingsInteraction)
+	bot.addCommandInteraction(setBotSettingsInteraction)
+}
+
+async function initializeDiscordStatus() {
+	const translator = new deepl.Translator(environments.DEEPL_AUTH_KEY)
+
+	const { character } = await translator.getUsage()
+	if (character?.limitReached()) {
+		limitReachedDiscordStatus()
+	} else {
+		usageUpdateDiscordStatus(character?.count || 0, character?.limit || 0)
+	}
 }
 
 async function init(): Promise<void> {
@@ -42,7 +55,6 @@ async function init(): Promise<void> {
 		environments.DISCORD_CLIENT_ID,
 		environments.DISCORD_CLIENT_SECRET,
 	)
-	const translator = new deepl.Translator(environments.DEEPL_AUTH_KEY)
 
 	try {
 		logger.info('Deepl Translator Bot is starting...')
@@ -54,18 +66,7 @@ async function init(): Promise<void> {
 		await addDiscordCommandInteractions(bot)
 
 		await bot.start()
-		const { character } = await translator.getUsage()
-		if (character?.limitReached()) {
-			bot.setStatus(
-				'Translation limit reached for this month. \nLimit will not be refreshed until the first of the next month',
-				PresenceUpdateStatus.Invisible,
-			)
-		} else {
-			bot.setStatus(
-				`Limit: ${character?.count} / ${character?.limit} Charachters`,
-				PresenceUpdateStatus.Online,
-			)
-		}
+		await initializeDiscordStatus()
 	} catch (error) {
 		logger.error(error)
 	}
