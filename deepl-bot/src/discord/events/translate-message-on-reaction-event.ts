@@ -1,11 +1,15 @@
-import { Client, Events, PresenceUpdateStatus } from 'discord.js'
+import { Client, Events } from 'discord.js'
 import { environments } from '../../utils'
 import logger from '../../utils/logger'
 import * as timers from 'node:timers/promises'
 import { getUserSettings, hasUserSettings } from '../../database/user-settings'
-import { mapLanguageToFlag } from '../common'
-import * as deepl from 'deepl-node'
-import { Discord } from '../discord'
+import {
+	getDeeplUsage,
+	limitReachedDiscordStatus,
+	mapLanguageToFlag,
+	translateText,
+	usageUpdateDiscordStatus,
+} from '../common'
 import { createLimitReachedEmbed, createNoSettingsEmbed, createTranslationEmbed } from '../embeds'
 
 export function translateMessageOnReactionEvent(client: Client): void {
@@ -28,33 +32,20 @@ export function translateMessageOnReactionEvent(client: Client): void {
 				await interaction.fetch()
 				const { targetLanguage } = await getUserSettings(user.id)
 				const targetFlag = mapLanguageToFlag(targetLanguage)
-				const originalMessage = interaction.message.content
+				const originalMessage = interaction.message.content!
 
-				const translator = new deepl.Translator(environments.DEEPL_AUTH_KEY)
+				const translation = await translateText(originalMessage, targetLanguage)
 
-				let usage = await translator.getUsage()
-				if (usage.character?.limitReached()) {
-					Discord.Instance.setStatus(
-						'Translation limit reached for this month. \nLimit will not be refreshed until the first of the next month',
-						PresenceUpdateStatus.Invisible,
-					)
+				if (!translation.successful) {
+					limitReachedDiscordStatus()
 					await user.send({ embeds: [createLimitReachedEmbed()] })
 					return
 				}
 
-				const translationResult = await translator.translateText(
-					originalMessage || '',
-					null,
-					targetLanguage as deepl.TargetLanguageCode,
-				)
+				const { count, limit } = await getDeeplUsage()
+				usageUpdateDiscordStatus(count, limit)
 
-				usage = await translator.getUsage()
-				Discord.Instance.setStatus(
-					`Limit: ${usage.character?.count} / ${usage.character?.limit} Charachters`,
-					PresenceUpdateStatus.Online,
-				)
-
-				const originalFlag = mapLanguageToFlag(translationResult.detectedSourceLang)
+				const originalFlag = mapLanguageToFlag(translation.detectedSourceLang)
 				await user.send({
 					embeds: [
 						createTranslationEmbed({
@@ -64,7 +55,7 @@ export function translateMessageOnReactionEvent(client: Client): void {
 							originalFlag,
 							targetFlag,
 							originalMessage,
-							translatedMessage: translationResult.text,
+							translatedMessage: translation.translation,
 						}),
 					],
 				})

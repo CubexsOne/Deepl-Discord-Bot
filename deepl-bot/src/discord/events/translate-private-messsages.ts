@@ -1,12 +1,15 @@
-import { ChannelType, Client, Events, PresenceUpdateStatus } from 'discord.js'
-import * as deepl from 'deepl-node'
+import { ChannelType, Client, Events } from 'discord.js'
 import * as timers from 'node:timers/promises'
 
-import { environments } from '../../utils'
 import logger from '../../utils/logger'
-import { mapLanguageToFlag } from '../common'
+import {
+	getDeeplUsage,
+	limitReachedDiscordStatus,
+	mapLanguageToFlag,
+	translateText,
+	usageUpdateDiscordStatus,
+} from '../common'
 import { getUserSettings, hasUserSettings } from '../../database/user-settings'
-import { Discord } from '../discord'
 import { createLimitReachedEmbed, createNoSettingsEmbed, createTranslationEmbed } from '../embeds'
 
 export function translatePrivateMessages(client: Client) {
@@ -28,37 +31,26 @@ export function translatePrivateMessages(client: Client) {
 				const targetFlag = mapLanguageToFlag(targetLanguage)
 				const originalMessage = message.content
 
-				const translator = new deepl.Translator(environments.DEEPL_AUTH_KEY)
+				const translation = await translateText(originalMessage, targetLanguage)
 
-				let usage = await translator.getUsage()
-				if (usage.character?.limitReached()) {
-					Discord.Instance.setStatus(
-						'Translation limit reached for this month. \nLimit will not be refreshed until the first of the next month',
-						PresenceUpdateStatus.Invisible,
-					)
+				if (!translation.successful) {
+					limitReachedDiscordStatus()
+
 					await author.send({ embeds: [createLimitReachedEmbed()] })
 					return
 				}
 
-				const translationResult = await translator.translateText(
-					originalMessage || '',
-					null,
-					targetLanguage as deepl.TargetLanguageCode,
-				)
-				usage = await translator.getUsage()
-				Discord.Instance.setStatus(
-					`Limit: ${usage.character?.count} / ${usage.character?.limit} Charachters`,
-					PresenceUpdateStatus.Online,
-				)
+				const { count, limit } = await getDeeplUsage()
+				usageUpdateDiscordStatus(count, limit)
 
-				const originalFlag = mapLanguageToFlag(translationResult.detectedSourceLang)
+				const originalFlag = mapLanguageToFlag(translation.detectedSourceLang)
 				await author.send({
 					embeds: [
 						createTranslationEmbed({
 							originalFlag,
 							targetFlag,
 							originalMessage,
-							translatedMessage: translationResult.text,
+							translatedMessage: translation.translation,
 						}),
 					],
 				})
