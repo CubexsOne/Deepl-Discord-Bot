@@ -16,7 +16,7 @@ const logger: Logger = createLogger({
 	level: 'info',
 	transports: [
 		new transports.Console({
-			level: process.env.NODE_ENV === 'PRODUCTION' ? 'error' : 'debug',
+			level: process.env.NODE_ENV === 'PRODUCTION' ? 'info' : 'debug',
 		}),
 	],
 })
