@@ -60,7 +60,7 @@ spec:
                   name: deepl-bot-config
                   key: DISCORD_TRANSLATE_EMOJI_ID
             - name: NODE_ENV
-              value: local
+              value: PRODUCTION
           resources:
             requests:
               memory: "256Mi"

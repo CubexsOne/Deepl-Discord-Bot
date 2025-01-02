@@ -33,7 +33,7 @@ Before you start please read the followings:
   - DISCORD_CLIENT_SECRET=`Client Secret from the 'OAuth2'-Tab from your bot on` [Discord Dev Portal][discordDevPoral]
   - DISCORD_TOKEN=`Bot Token from the 'Bot'-Tab from your bot on` [Discord Dev Portal][discordDevPoral]
   - DISCORD_TRANSLATE_EMOJI_ID=`The ID of the emoji to be used for the reactions, this can be from the same server, but also one that was uploaded directly in the bot under the 'Emoji'-tab of your bot on` [Discord Dev Portal][discordDevPoral]
-  - NODE_ENV=`'local' or 'prod' to differentiate between the environments and control logging`
+  - NODE_ENV=`'LOCAL' or 'PRODUCTION' to differentiate between the environments and control logging`
 4. Run `make dev` in the `./deepl-bot`-directory to run the bot on your machine
 
 ### To run on Docker
