@@ -6,10 +6,6 @@ help:
 dev: ## Start Deepl Discord Bot in dev-mode
 	@npm run dev
 
-build: ## Transpile typescript code to javascript
+lint: ## Lint and format code
 	@npm run lint
-	@npm run build
-
-run: ## Build and run Deepl Discord Bot
-	@make build
-	@node --env-file=.env app/main.js
+	@npm run format
