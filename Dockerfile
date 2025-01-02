@@ -10,4 +10,4 @@ RUN npm i
 COPY ./deepl-bot .
 RUN npm run prisma:generate;
 
-CMD [ "sh", "-c", "npm run prisma:deploy; npm run prod" ]
+CMD [ "sh", "-c", "npm run prisma:deploy; npm run container" ]

@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"dev": "nodemon -r dotenv/config src/main.ts",
-		"prod": "nodemon src/main.ts",
+		"container": "nodemon src/main.ts",
 		"build": "tsc src/main.ts --outDir app",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
